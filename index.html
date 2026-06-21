@@ -1,0 +1,745 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Besty ✨ - Healing & Growth Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #4a3fcc;
+            --secondary: #706fd3;
+            --accent: #ff5252;
+            --dark-purple: #2c2c54;
+            --gradient-bg: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
+            --aurora-cover: linear-gradient(135deg, #74b9ff, #a29bfe, #fd79a8, #ffeaa7);
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg); background-size: 400% 400%;
+            animation: auroraBg 15s ease infinite; color: #2f3542; 
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        @keyframes auroraBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px);
+            padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 999;
+        }
+        .page-indicator { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; color: var(--primary); font-weight: 600; }
+
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .slide { display: none; width: 100%; max-width: 800px; animation: fadeIn 0.4s ease-out; }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--card-bg); border-radius: 25px; padding: 35px; box-shadow: 0 10px 30px rgba(108, 92, 231, 0.06); border: 1px solid rgba(255,255,255,0.7); position: relative; overflow: hidden; }
+        h2 { font-family: 'Fredoka', sans-serif; color: var(--dark-purple); margin-top: 0; }
+        h3 { font-family: 'Fredoka', sans-serif; color: var(--primary); }
+        
+        textarea { width: 100%; height: 120px; border: 2px solid #e1bee7; border-radius: 15px; padding: 15px; font-size: 1rem; font-family: inherit; resize: none; outline: none; box-sizing: border-box; background: rgba(255,255,255,0.6); transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); background: white; }
+
+        .navigation-footer { background: white; padding: 15px 25px; display: flex; justify-content: space-between; border-top: 1px solid #dcdde1; }
+        .btn-nav { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.95rem; transition: 0.2s; }
+        .btn-nav:hover { background: var(--secondary); transform: translateY(-2px); }
+        .btn-nav:disabled { background: #ced6e0; cursor: not-allowed; transform: none; }
+        .btn-home { background: #747d8c; }
+        .btn-home:hover { background: #57606f; }
+
+        .cover-style { background: var(--aurora-cover); background-size: 400% 400%; animation: auroraBg 10s ease infinite; color: white; text-align: center; border-radius: 30px; padding: 60px 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+        .cover-title { font-family: 'Fredoka', sans-serif; font-size: 3.2rem; margin: 10px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .btn-start { background: white; color: var(--primary); font-family: 'Fredoka', sans-serif; padding: 16px 45px; border-radius: 50px; border: none; font-size: 1.2rem; font-weight: 600; cursor: pointer; margin-top: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: 0.3s; }
+
+        .search-box-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 18px; padding: 20px; margin-top: 20px; }
+        .flex-input-group { display: flex; gap: 10px; margin-top: 10px; }
+        .input-ticket { flex: 1; border: 2px solid #cbd5e1; border-radius: 12px; padding: 10px 15px; font-size: 1rem; outline: none; font-family: inherit; }
+        .ticket-result-box { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; background: white; border-left: 5px solid var(--primary); line-height: 1.6; }
+
+        /* VIRTUAL TOUCH ANIMATION CANVAS & TEXT ACCORDION */
+        .touch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        .touch-btn { background: linear-gradient(135deg, #ffffff, #fbfaff); border: 2px solid #e2e8f0; padding: 20px 10px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 1rem; text-align: center; }
+        .touch-btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px); }
+        
+        .animation-screen { width: 100%; height: 180px; background: #2c2c54; border-radius: 15px; margin-top: 15px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .anim-element { font-size: 4rem; display: none; position: absolute; }
+        
+        /* Animation keyframes */
+        @keyframes pulseHug { 0%, 100% { transform: scale(1); opacity:0.9; } 50% { transform: scale(1.3); opacity:1; } }
+        @keyframes shakeHand { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(15deg); } }
+        @keyframes wavePulse { 0% { transform: scale(0.8); opacity:0.4; } 100% { transform: scale(1.5); opacity:0; } }
+        
+        .speech-subtitle-box { background: #f1f2f6; border-radius: 12px; padding: 15px; margin-top: 15px; display: none; border-left: 4px solid var(--secondary); font-style: italic; line-height: 1.5; color: #2f3542; }
+
+        /* QUIZ ARCHITECTURE */
+        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 10px; width: 100%; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, var(--accent), var(--primary)); height: 100%; width: 0%; transition: width 0.3s; }
+        .quiz-part-title { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .quiz-option { background: rgba(255,255,255,0.7); padding: 14px 20px; border-radius: 15px; margin-top: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; font-weight: 500; }
+        .quiz-option:hover { background: white; border-color: var(--secondary); color: var(--primary); transform: translateX(4px); }
+        .quiz-feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 15px; background: #fff9fa; border-left: 5px solid var(--accent); line-height: 1.6; font-size: 0.95rem; }
+
+        .grid-menu-3 { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; margin-top: 15px; }
+        @media(min-width: 600px){ .grid-menu-3 { grid-template-columns: repeat(2, 1fr); } }
+        .item-box { background: rgba(255,255,255,0.7); padding: 18px; border-radius: 20px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .item-box:hover { transform: translateY(-3px); background: white; border-color: var(--primary); }
+        .item-box i { font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 36, 76, 0.5); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 30px; border-radius: 25px; max-width: 650px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #b2bec3; }
+        .nested-item { background: #f8fafc; margin-bottom: 8px; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+        .nested-header { padding: 12px 18px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #edf2f7; }
+        .nested-body { padding: 15px 18px; display: none; line-height: 1.6; border-top: 1px solid #e2e8f0; background: #fff; font-size: 0.95rem; }
+
+        .jar-wrapper { width: 120px; height: 160px; margin: 20px auto; cursor: pointer; transition: 0.3s; position: relative; }
+        .jar-icon { font-size: 7rem; color: #a29bfe; }
+        .shattered-msg { display: none; background: rgba(255, 118, 117, 0.1); border: 2px dashed #ff7675; border-radius: 20px; padding: 20px; margin-top: 15px; }
+
+        .family-illustration { position: relative; width: 100%; height: 220px; background: linear-gradient(to top, #2c2c54, #4b4b7c); border-radius: 20px; overflow: hidden; margin: 20px 0; display: flex; justify-content: center; align-items: flex-end; }
+        .window-glow { position: absolute; width: 140px; height: 160px; background: #f7d794; top: 20px; border-radius: 70px 70px 0 0; opacity: 0.15; filter: blur(20px); }
+        .family-silhouettes { display: flex; align-items: flex-end; gap: 15px; z-index: 2; margin-bottom: 10px; }
+        .member { background: #1e1e38; border-radius: 50% 50% 0 0; }
+        .father { width: 50px; height: 110px; border-radius: 25px 25px 0 0; }
+        .mother { width: 45px; height: 100px; border-radius: 25px 25px 0 0; }
+        .child { width: 30px; height: 65px; border-radius: 15px 15px 0 0; }
+
+        .sea-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, #74b9ff, #0984e3, #2c3e50); z-index: 999999; justify-content: center; align-items: center; overflow: hidden; }
+        .ocean { width: 100%; height: 100%; position: absolute; }
+        .wave { background: url('https://i.imgur.com/H6bNq2X.png') repeat-x; position: absolute; bottom: 0; width: 6400px; height: 180px; animation: waveAnimation 6s infinite linear; opacity: 0.7; }
+        @keyframes waveAnimation { 0% { margin-left: 0; } 100% { margin-left: -1600px; } }
+        .bottle-container { text-align: center; color: white; padding: 20px; max-width: 450px; width: 90%; z-index: 10; }
+
+        .ticket-modal-card { background: white; border-radius: 24px; padding: 30px; text-align: center; color: #2f3542; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 4px solid var(--primary); display: none; margin-top: 20px; }
+        .warning-badge-box { background: #fff3cd; border-left: 5px solid #ffc107; color: #856404; padding: 15px; border-radius: 8px; font-size: 0.9rem; text-align: left; margin: 15px 0; font-weight: 500; }
+        .ticket-code-badge { font-size: 2.2rem; font-family: 'Fredoka', sans-serif; font-weight: 600; color: var(--primary); background: #f1f2f6; padding: 10px 25px; border-radius: 12px; display: inline-block; margin: 10px 0; letter-spacing: 2px; border: 2px dashed var(--secondary); }
+    </style>
+</head>
+<body>
+
+<div class="sea-overlay" id="seaOverlay">
+    <div class="ocean"><div class="wave"></div></div>
+    <div class="bottle-container" id="bottleContainer">
+        <i class="fa-solid fa-bottle-droplet" style="font-size:6rem; color: white;"></i>
+        <h3 id="seaOverlayText" style="color: white; font-family:'Fredoka'; margin-top:15px; font-size: 1.5rem;">Menghanyutkan Beban Jiwamu...</h3>
+        
+        <div class="ticket-modal-card" id="ticketConfirmCard">
+            <h2 style="color: #2c2c54; margin-bottom: 5px;"><i class="fa-solid fa-circle-check" style="color:#2ecc71;"></i> Pesan Berhasil Dihanyutkan!</h2>
+            <div class="warning-badge-box">
+                <strong>⚠️ PENTING:</strong> Catat nomor tiket di bawah ini untuk mengecek isi surat balasan bimbingan emosional dari Besty nanti!
+            </div>
+            <div class="ticket-code-badge" id="generatedTicketDisplay">#BESTY-0000</div>
+            <button class="btn-nav" style="margin: 20px auto 0 auto; width: 100%; justify-content: center; background: #2f3542;" onclick="acknowledgeAndReleaseLock()">
+                Saya Sudah Mencatat Nomor Tiket
+            </button>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="logo-box">
+        <span style="font-family:'Fredoka'; font-weight:600; font-size:1.6rem; color:var(--primary);">Besty ✨</span>
+    </div>
+    <div class="page-indicator" id="pageIndicator">Halaman 1 / 7</div>
+</header>
+
+<div class="container" id="mainAppContainer">
+    
+    <div class="slide active" id="slide-1">
+        <div class="cover-style">
+            <div style="font-size: 3.5rem;">✨</div>
+            <h1 class="cover-title">Halo, selamat datang di dunia Besty</h1>
+            <p style="font-size: 1.15rem; max-width: 600px; margin: 15px auto; opacity: 0.95; line-height:1.6;">
+                Ruang perlindungan emosional, eksplorasi kesehatan mental, refleksi diri, serta panduan edukasi resmi kesiapan berkeluarga standarisasi GenRe Indonesia.
+            </p>
+            <button class="btn-start" onclick="startJourney()">Mari menjelajah bersama Besty <i class="fa-solid fa-compass"></i></button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+        <div class="card">
+            <h2>Halaman 2: Ruang Ekspresi Bebas Pikiran 💬</h2>
+            <p style="color:#7f8c8d;">Ketik keluh kesah, kemarahan, atau rahasiamu. Kita masukkan ke botol kaca dan biarkan semesta lautan menghanyutkannya pergi.</p>
+            <textarea id="storyInput" placeholder="Curahkan segalanya tanpa takut dihakimi, di sini kamu aman dan anonim..."></textarea>
+            <button class="btn-nav" style="margin-top:15px; background:var(--secondary);" onclick="submitJournalToDatabase()"><i class="fa-solid fa-paper-plane"></i> Hanyutkan ke Lautan</button>
+            
+            <div class="search-box-container">
+                <h3 style="margin:0; font-size:1.1rem; color:var(--dark-purple);"><i class="fa-solid fa-envelope-open-text"></i> Kotak Pencari Surat Balasan Besty</h3>
+                <div class="flex-input-group">
+                    <input type="text" class="input-ticket" id="ticketSearchInput" placeholder="Contoh: #BESTY-1234">
+                    <button class="btn-nav" onclick="searchTicketReply()"><i class="fa-solid fa-magnifying-glass"></i> Cari Balasan</button>
+                </div>
+                <div class="ticket-result-box" id="ticketResultBox"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+        <div class="card">
+            <h2>Halaman 3: Virtual Touch Support & Affirmation 🔊</h2>
+            <p style="color:#7f8c8d;">Pilih bentuk kehadiran fisik virtual yang kamu butuhkan saat ini:</p>
+            
+            <div class="touch-grid">
+                <button class="touch-btn" onclick="triggerTouchAnimation('hug')">🤗 Pelukan Hangat</button>
+                <button class="touch-btn" onclick="triggerTouchAnimation('hand')">🤝 Genggam Erat</button>
+                <button class="touch-btn" onclick="triggerTouchAnimation('miss')">❤️ Bisikan Semangat</button>
+            </div>
+
+            <div class="animation-screen" id="animScreen">
+                <div class="anim-element" id="ae-hug" style="color: #ff7675; animation: pulseHug 1.5s infinite ease-in-out;"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="anim-element" id="ae-hand" style="color: #ffeaa7; animation: shakeHand 0.8s infinite ease-in-out;"><i class="fa-solid fa-hands-holding"></i></div>
+                <div class="anim-element" id="ae-miss" style="color: #74b9ff; animation: wavePulse 1s infinite linear;"><i class="fa-solid fa-waveform-lines"></i></div>
+                <p id="animPlaceholder" style="color:rgba(255,255,255,0.4); font-size:0.9rem; text-align:center; padding:20px;">Klik tombol di atas untuk menyalakan sinyal emosional tubuh...</p>
+            </div>
+
+            <div class="speech-subtitle-box" id="speechSubtitle">
+                <strong>🗣️ Pesan Suara Pendukung:</strong> <span id="speechTextContent"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+        <div class="card">
+            <div class="progress-container"><div class="progress-bar" id="quizBar"></div></div>
+            <div class="quiz-part-title" id="partTitle">Meracik Paket Kuis...</div>
+            <h3 id="questionText" style="margin-top: 10px; color: var(--dark-purple);"></h3>
+            
+            <div id="optionsContainer"></div>
+            
+            <div id="essayContainer" style="display:none; margin-top:15px;">
+                <textarea id="essayInput" placeholder="Tuliskan komitmen masa depan, janji pertumbuhan, dan kalimat sayang untuk dirimu sendiri..."></textarea>
+            </div>
+            
+            <div class="quiz-feedback" id="quizFeedbackBox"></div>
+            
+            <div style="margin-top:20px; display:flex; gap:10px;">
+                <button class="btn-nav" id="nextQuizBtn" style="display:none;" onclick="processNextStep()">Langkah Kuis Berikutnya <i class="fa-solid fa-arrow-right"></i></button>
+                <button class="btn-nav btn-home" id="resetQuizBtn" style="display:none;" onclick="generatePersonalQuizBundle()">Ulangi Kuis Dari Awal <i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-5">
+        <div class="card">
+            <h2>Halaman 5: Pusat Edukasi Kesiapan Keluarga & GenRe ✊🔥</h2>
+            <p style="color:#7f8c8d; margin-top:-5px;">Pilih modul di bawah ini untuk membuka peninjauan materi interaktif standarisasi BKKBN:</p>
+            <div class="grid-menu-3">
+                <div class="item-box" onclick="openGenRe('dimensi')"><i class="fa-solid fa-layer-group"></i><h3>10 Dimensi Kesiapan</h3></div>
+                <div class="item-box" onclick="openGenRe('fungsi')"><i class="fa-solid fa-people-roof"></i><h3>8 Fungsi Keluarga</h3></div>
+                <div class="item-box" onclick="openGenRe('mental')"><i class="fa-solid fa-brain"></i><h3>Kesehatan Mental & Asuh</h3></div>
+                <div class="item-box" onclick="openGenRe('softskill')"><i class="fa-solid fa-heart-pulse"></i><h3>10 Life Skill (WHO)</h3></div>
+                <div class="item-box" onclick="openGenRe('gati')" style="grid-column:1/-1; border:1px solid var(--primary);"><i class="fa-solid fa-seedling"></i><h3>Program GATI (BKKBN)</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-6">
+        <div class="card" style="text-align: center;">
+            <h2>Halaman 6: Jar of Fears Therapy (Hancurkan Hambatan!) 🫙💥</h2>
+            <p style="color:#7f8c8d;">Kurung rasa cemas, trauma masa lalu, atau kegundahan pikiranmu di dalam toples ini, lalu pecahkan hingga hancur lebur!</p>
+            <textarea id="jarInput" placeholder="Contoh: 'Aku cemas tidak bisa memutus rantai toxic parents...' atau 'Aku takut gagal...'"></textarea>
+            <div class="jar-wrapper" onclick="shatterTheJar()">
+                <i class="fa-solid fa-jar jar-icon" id="jarIcon"></i>
+            </div>
+            <h4 id="jarHint" style="color:var(--primary);">👇 Klik gambar toples di atas untuk menghancurkannya!</h4>
+            <div class="shattered-msg" id="shatteredBox">
+                <h3 style="color:#d63031; margin:0;"><i class="fa-solid fa-bomb"></i> PRRAAAKKK!! Hancur Total!</h3>
+                <p id="catharsisText" style="color:#2d3436; font-weight:500; margin:15px 0; line-height:1.6; text-align:left; background:white; padding:15px; border-radius:12px; border-left:4px solid #ff7675;"></p>
+                <button class="btn-nav" style="background:var(--secondary); margin:0 auto;" onclick="resetJar()">Ambil Toples Baru</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-7">
+        <div class="card" style="text-align: center; background: #ffffff;">
+            <h2 style="color: var(--primary); font-family: 'Fredoka'; font-size: 2rem;">Halaman Akhir: Terima Kasih Telah Berjuang! 🏆✨</h2>
+            <div class="family-illustration">
+                <div class="window-glow"></div>
+                <div class="family-silhouettes">
+                    <div class="member father"></div>
+                    <div class="member child"></div>
+                    <div class="member mother"></div>
+                </div>
+            </div>
+            <p style="font-size: 1.1rem; font-weight: 500; color: var(--dark-purple); margin-top: 20px; line-height: 1.7; text-align: justify;">
+                Sehebat apa pun luka yang sedang kita pulihkan, tetap tanamkan di dalam dada bahwa **sisanya tempat kembali paling aman dan pelindung utama hakiki adalah struktur keluarga**. 
+            </p>
+            <div style="background: #fff0f3; padding: 15px; border-radius: 15px; border-left: 5px solid var(--accent); font-weight: 600; color: #c0392b; margin-top: 15px; text-align: left; line-height:1.5;">
+                ✊🔥 Kita sebagai Remaja yang Berencana (GenRe) memikul misi besar di pundak kita: Kita HARUS bisa dan MAMPU memutus mata rantai "Fatherless" serta pola asuh rapuh di masa depan demi generasi penerus bangsa yang sehat, tangguh, dan bahagia!
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="genreModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeGenRe()">&times;</span>
+        <h2 id="genreModalTitle" style="border-bottom: 2px solid #edf2f7; padding-bottom: 10px; color:var(--primary);"></h2>
+        <div id="genreModalBody"></div>
+    </div>
+</div>
+
+<div class="navigation-footer">
+    <button class="btn-nav btn-home" onclick="goToCoverAwal()"><i class="fa-solid fa-book"></i> Back to Cover</button>
+    <div style="display:flex; gap:10px;">
+        <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+        <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">Next Page <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script>
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWsxxleqgI22HFK5_okWB4cKkecFN2MbRRB3jvc7QHQ8UinZixQMV6xf3s8NHrYtcl/exec";
+    // System database simulation
+    if(!localStorage.getItem('BESTY_DB')) { localStorage.setItem('BESTY_DB', JSON.stringify([])); }
+
+    let currentSlide = 1;
+    const totalSlides = 7; 
+
+    const touchTexts = {
+        hug: "Aku bangga banget sama ketangguhan kamu. Sekarang, tarik napas dalam-dalam, rileks aja, dan rasain pelukan hangat penuh perlindungan dari aku hari ini.",
+        hand: "Genggam erat tangan virtual aku ini ya. Mulai detik ini, kita sepakat kalau semua luka lama ataupun trauma masa lalu kamu nggak punya hak sedikit pun buat ngatur masa depan kamu.",
+        miss: "Masa depan yang tenang, emosi yang stabil, dan hidup yang mandiri itu pasti bisa kamu raih kok! Kamu berharga."
+    };
+
+    function updateNav() {
+        document.getElementById('pageIndicator').innerText = `Halaman ${currentSlide} / ${totalSlides}`;
+        document.getElementById('prevBtn').disabled = (currentSlide === 1);
+        document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+        document.querySelector('.navigation-footer').style.visibility = (currentSlide === 1) ? 'hidden' : 'visible';
+    }
+
+    function startJourney() {
+        speakOfficial("Selamat datang di dunia Besty! Mari menjelajah bersama.");
+        changeSlide(1);
+    }
+
+    function changeSlide(direction) {
+        document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+        currentSlide += direction;
+        document.getElementById(`slide-${currentSlide}`).classList.add('active');
+        updateNav();
+        window.speechSynthesis.cancel();
+        if(currentSlide === 4 && personalQuizBundle.length === 0) { generatePersonalQuizBundle(); }
+    }
+
+    function goToCoverAwal() {
+        document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+        currentSlide = 1;
+        document.getElementById(`slide-${currentSlide}`).classList.add('active');
+        updateNav();
+        window.speechSynthesis.cancel();
+    }
+
+    function speakOfficial(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let u = new SpeechSynthesisUtterance(text);
+            u.lang = 'id-ID'; u.rate = 1.1;
+            window.speechSynthesis.speak(u);
+        }
+    }
+
+    function triggerTouchAnimation(type) {
+        document.getElementById('animPlaceholder').style.display = 'none';
+        document.getElementById('ae-hug').style.display = 'none';
+        document.getElementById('ae-hand').style.display = 'none';
+        document.getElementById('ae-miss').style.display = 'none';
+        
+        // Show selected anim element
+        document.getElementById(`ae-${type}`).style.display = 'block';
+        
+        // Display Text Box Subtitle
+        const textToSay = touchTexts[type];
+        document.getElementById('speechTextContent').innerText = textToSay;
+        document.getElementById('speechSubtitle').style.display = 'block';
+        
+        speakOfficial(textToSay);
+    }
+
+    
+    function acknowledgeAndReleaseLock() {
+        document.getElementById('seaOverlay').style.display = 'none';
+        document.getElementById('storyInput').value = "";
+    }
+    
+    function submitJournalToDatabase() {
+    const text = document.getElementById('storyInput').value.trim();
+    if(!text) { alert("Tuliskan curhatan isi pikiranmu terlebih dahulu!"); return; }
+    
+    // Generate Tiket Unik
+    const generatedTicketID = `#BESTY-${Math.floor(1000 + Math.random() * 9000)}`;
+    
+    // Ubah tampilan loading visual lautan dihanyutkan
+    document.getElementById('seaOverlayText').style.display = "block";
+    document.getElementById('seaOverlayText').innerText = "Menghanyutkan Beban Jiwamu ke Database...";
+    document.getElementById('ticketConfirmCard').style.display = "none";
+    document.getElementById('seaOverlay').style.display = 'flex';
+
+    // Kirim data secara asinkronus ke Google Sheets
+    fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Mode no-cors digunakan untuk bypass restriksi web statis biasa
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            ticketID: generatedTicketID,
+            story: text
+        })
+    })
+    .then(() => {
+        // Karena no-cors, kita asumsikan sukses jika tidak ada error network
+        document.getElementById('generatedTicketDisplay').innerText = generatedTicketID;
+        document.getElementById('ticketConfirmCard').style.display = "block";
+        document.getElementById('seaOverlayText').style.display = "none";
+    })
+    .catch(err => {
+        alert("Gagal menghanyutkan cerita karena masalah koneksi.");
+        document.getElementById('seaOverlay').style.display = 'none';
+        console.error(err);
+    });
+}
+
+   function searchTicketReply() {
+    const searchKey = document.getElementById('ticketSearchInput').value.trim().toUpperCase();
+    const resultBox = document.getElementById('ticketResultBox');
+    if(!searchKey) { alert("Masukkan nomor tiket Anda!"); return; }
+    
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `<i>Sedang mencari surat balasan di lautan...</i>`;
+    
+    // Ambil data balasan dari Google Sheets berdasarkan Ticket ID
+    fetch(`${APPS_SCRIPT_URL}?ticketID=${encodeURIComponent(searchKey)}`)
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === "found") {
+            resultBox.innerHTML = `<b>Balasan Konselor Besty untuk ${searchKey}:</b><br><p>"${data.feedback}"</p>`;
+        } else {
+            resultBox.innerHTML = `<b style="color:#e74c3c;">Tiket Tidak Ditemukan!</b><br><p>Pastikan format nomor tiket benar (Contoh: #BESTY-1234) atau mungkin Besty belum sempat membaca suratmu.</p>`;
+        }
+    })
+    .catch(err => {
+        resultBox.innerHTML = `<b style="color:#e74c3c;">Gagal memuat balasan.</b>`;
+        console.error(err);
+    });
+}
+
+    // ========================================================
+    // DYNAMIC RESPONSIBLE ANALYSIS ENGINE PADA TOPLES KETAKUTAN
+    // ========================================================
+    function shatterTheJar() {
+        const val = document.getElementById('jarInput').value.trim().toLowerCase();
+        if(!val) { alert("Ketik kegundahan/ketakutanmu dulu sebelum memecahkannya!"); return; }
+        
+        document.getElementById('jarIcon').className = "fa-solid fa-burst jar-icon";
+        document.getElementById('shatteredBox').style.display = "block";
+        document.getElementById('jarHint').style.display = "none";
+        
+        let customResponse = "";
+        
+        // Keyword detection system for custom text matching response
+        if(val.includes("gagal") || val.includes("takut salah") || val.includes("ujian")) {
+            customResponse = `Ketakutanmu tentang kegagalan telah pecah menjadi debu! Dengar, kegagalan hanyalah tanda bahwa kamu sedang mencoba berjuang. Kamu tidak gagal, kamu sedang belajar bertumbuh lebih hebat!`;
+        } else if(val.includes("orang tua") || val.includes("toxic") || val.includes("ayah") || val.includes("ibu") || val.includes("keluarga")) {
+            customResponse = `Luka pengasuhan dan kecemasanmu perihal masa lalu keluarga kini hancur lebur! Sifat buruk masa lalu mereka tidak mendikte siapa dirimu. Kamu memegang kendali penuh untuk menjadi pemutus rantai trauma itu!`;
+        } else if(val.includes("sendiri") || val.includes("kesepian") || val.includes("minder") || val.includes("teman")) {
+            customResponse = `Rasa minder dan sepi itu kini hancur berkeping-keping! Kamu utuh, kamu berharga, dan kamu tidak butuh validasi palsu dari lingkungan yang tidak menghargaimu.`;
+        } else {
+            customResponse = `Beban pikiranmu mengenai hal tersebut kini telah hancur berkeping-keping! Semesta melepaskan energinya yang berat darimu sekarang. Tarik napas dalam, kamu terbebas.`;
+        }
+        
+        document.getElementById('catharsisText').innerText = customResponse;
+        speakOfficial(customResponse);
+    }
+
+    function resetJar() {
+        document.getElementById('jarInput').value = "";
+        document.getElementById('jarIcon').className = "fa-solid fa-jar jar-icon";
+        document.getElementById('shatteredBox').style.display = "none";
+        document.getElementById('jarHint').style.display = "block";
+    }
+
+    // =========================================================================
+    // 9 DEEP EMOTIONAL RESPONSIBLE QUIZ DATA ARCHITECTURE + 1 ESSAY COMMITMENT
+    // =========================================================================
+    const bankSoal = {
+        1: {
+            q: "Saat merasa emosimu sedang membuncah tak terkendali, tindakan apa yang paling sering refleks kamu lakukan?",
+            o: [
+                {t: "Memilih diam, mengurung diri, dan memendamnya rapat-rapat", r: "Memendam emosi itu berat ya... Validasi emosimu, tidak apa-apa jika ingin menangis. Menangis bukanlah tanda lemah, melainkan cara tubuh membasuh lelah jiwamu."},
+                {t: "Meluapkannya dengan marah-marah ke barang atau orang sekitar", r: "Kemarahanmu adalah sinyal bahwa ada rasa sakit yang belum selesai di dalam dada. Tarik napas dalam-dalam, mari salurkan energi marah itu ke tulisan atau olahraga bersama Besty."},
+                {t: "Mencari pengalihan instan seperti tidur atau scroll media sosial", r: "Pengalihan bisa meredakan sementara, tapi emosimu butuh didengarkan, bukan diabaikan. Aku di sini siap menemani sampai perasaanmu benar-benar tenang."}
+            ]
+        },
+        2: {
+            q: "Bagaimana cara pandangmu terhadap kegagalan atau kesalahan yang tidak sengaja kamu perbuat?",
+            o: [
+                {t: "Menyalahkan diri sendiri habis-habisan dan menganggap diri bodoh", r: "Hei, tolong peluk dirimu sendiri sekarang. Kamu hanyalah manusia biasa yang berhak berproses salah. Jangan hukum dirimu atas hal yang sudah terlanjur terjadi."},
+                {t: "Merasa cemas luar biasa seolah dunia akan segera runtuh", r: "Kecemasan itu wajar hadir. Namun ingat, kesalahan kecil tidak akan menghapus seluruh nilai kebaikan dan kehebatan yang ada di dalam dirimu."},
+                {t: "Mencoba mencari alasan dan menyalahkan keadaan di luar kendali", r: "Menerima realita memang butuh keberanian besar. Kamu hebat jika berani mengevaluasi perlahan tanpa harus merasa tersudut."}
+            ]
+        },
+        3: {
+            q: "Ketika melihat keberhasilan teman sebaya di sekitarmu, apa berbisik di dalam pikiranmu?",
+            o: [
+                {t: "Merasa minder, kecil, dan merasa tertinggal jauh di belakang", r: "Waktu mekarmu tidak harus sama dengan orang lain. Garis start dan rintangan hidup kalian berbeda. Fokus saja pada langkah kecil pertumbuhanmu hari ini."},
+                {t: "Ikut senang tapi di dalam hati merasa sedih meratapi nasib", r: "Terima kasih sudah memilih menjadi orang baik yang ikut bahagia. Perasaan sedihmu adalah tanda bahwa kamu pun punya mimpi besar yang ingin dicapai. Kamu pasti bisa!"},
+                {t: "Termotivasi secara kompetitif hingga memaksakan diri bekerja keras", r: "Semangatmu luar biasa! Tapi ingat ya, istirahatlah jika lelah. Kesehatan mental dan fisikmu jauh lebih berharga dari sekadar trofi pencapaian."}
+            ]
+        },
+        4: {
+            q: "Bagaimana hubungan emosional terdalam yang kamu rasakan dengan figur ayah atau ibumu di rumah?",
+            o: [
+                {t: "Sangat renggang, hambar, seperti orang asing yang tinggal satu atap", r: "Pasti terasa sepi dan hampa ya tinggal di lingkungan yang dingin... Ketahuilah kamu berhak membangun ruang hangatmu sendiri bersama support system pilihanmu."},
+                {t: "Penuh konflik emosional, sering mendapat tuntutan atau bentakan", r: "Aku memvalidasi rasa sakit dan lelahmu menghadapi lingkaran toxic ini. Kamu tidak bertanggung jawab atas luka batin yang mereka tularkan padamu."},
+                {t: "Cukup harmonis namun sulit membicarakan masalah kesehatan mental", r: "Bagus jika ada kehangatan fisik. Pelan-pelan kita edukasi mereka, atau gunakan Besty sebagai jembatan pemahaman barumu."}
+            ]
+        },
+        5: {
+            q: "Saat seseorang melanggar batasan pribadimu (privacy), apa yang akan kamu lakukan?",
+            o: [
+                {t: "Terpaksa membiarkannya karena takut merusak pertemanan", r: "Mengatakan 'tidak' dan menjaga batasan diri adalah bentuk tertinggi dari mencintai diri sendiri. Sahabat yang baik pasti akan menghargai batasanmu."},
+                {t: "Menegur dengan keras dan penuh ledakan emosi amarah", r: "Ketegasanmu bagus, namun pastikan disampaikan dengan kepala dingin agar pesan perlindungan dirimu tersampaikan dengan elegan tanpa memicu dendam baru."},
+                {t: "Menjauh secara perlahan tanpa memberikan kejelasan (ghosting)", r: "Menjaga jarak aman terkadang diperlukan demi kedamaian jiwa. Jaga dirimu baik-baik dari energi yang menguras energimu."}
+            ]
+        },
+        6: {
+            q: "Apa ketakutan terbesar yang membayangi pikiranmu mengenai masa depan pernikahan atau keluargamu kelak?",
+            o: [
+                {t: "Takut menjadi orang tua yang toxic dan mengulangi kesalahan masa lalu", r: "Kesadaranmu hari ini adalah bukti konkret bahwa kamu TIDAK akan mengulangi kesalahan itu. Kamu sedang belajar menjadi pemutus rantai trauma!"},
+                {t: "Takut tidak mampu secara ekonomi dan gagal memenuhi kebutuhan anak", r: "Pemikiran yang sangat bertanggung jawab. Inilah mengapa GenRe menekankan 10 Dimensi Kesiapan agar semuanya terencana matang sebelum melangkah."},
+                {t: "Takut salah memilih pasangan hidup yang kasar atau tidak setia", r: "Sangat valid. Gunakan masa remajamu untuk mengasah life skill dan ketajaman emosional agar kelak bisa memilih pasangan yang setara dan suportif."}
+            ]
+        },
+        7: {
+            q: "Seberapa sering kamu meluangkan waktu untuk mengapresiasi dan mencintai dirimu sendiri (self-love)?",
+            o: [
+                {t: "Hampir tidak pernah, saya selalu fokus pada kekurangan diri", r: "Mulai detik ini, berhentilah menjadi kritikus terkejam bagi dirimu sendiri. Kamu sudah berjuang sejauh ini melewati banyak badai hidup. Kamu hebat!"},
+                {t: "Hanya saat berhasil meraih suatu pencapaian atau pujian luar", r: "Dirimu berharga bukan karena piala atau angka, melainkan karena jiwamu yang murni bertahan hidup. Cintai dirimu dalam kondisi apa pun."},
+                {t: "Sudah rutin melakukan self-care demi menjaga kestabilan mental", r: "Luar biasa! Pertahankan rutinitas sehat ini. Kamu adalah teladan remaja berencana yang cerdas secara emosional."}
+            ]
+        },
+        8: {
+            q: "Ketika masa lalu kelam atau trauma masa kecil mendadak teringat kembali, apa yang terjadi pada tubuhmu?",
+            o: [
+                {t: "Jantung berdebar kencang, sesak napas, atau menangis histeris", r: "Tarik napas perlahan... embuskan... Rasakan pijakan kakimu di bumi saat ini. Masa lalu itu sudah lewat, saat ini kamu aman bersama Besty."},
+                {t: "Merasa mati rasa, hampa, dan kehilangan motivasi beraktivitas", r: "Tubuhmu sedang kelelahan menahan memori berat itu. Istirahatlah, jangan paksa dirimu bekerja keras hari ini. Beri jeda pada jiwamu."},
+                {t: "Mencoba kuat dan berpura-pura seolah semuanya baik-baik saja", r: "Kamu tidak harus selalu terlihat kuat di depan semua orang. Di sini, di dunia Besty, kamu boleh rapuh dan menumpahkan segala keluh kesahmu."}
+            ]
+        },
+        9: {
+            q: "Apa makna kebahagiaan sejati yang paling ingin kamu capai dalam fase kehidupanmu saat ini?",
+            o: [
+                {t: "Kedamaian pikiran yang tenang, bebas dari kecemasan berlebih", r: "Kedamaian jiwa adalah kemewahan tertinggi. Langkahmu mengeksplorasi mental health bersama Besty adalah jalan pembuka menuju ketenangan itu."},
+                {t: "Kemandirian finansial agar bisa bebas pergi dari lingkungan toxic", r: "Visi kemandirian yang sangat kuat! Teruskan belajarmu, asah kecakapan hidup (life skill), gerbang kebebasan dan kesuksesan menantimu di depan."},
+                {t: "Memiliki sirkel pertemanan atau pasangan yang menerima apa adanya", r: "Penerimaan adalah obat penawar luka batin terbaik. Semoga kamu segera dipertemukan dengan jiwa-jiwa hangat yang menghargaimu utuh."}
+            ]
+        },
+        10: { type: "essay", q: "Langkah Terakhir: Tuliskan sebuah kalimat janji cinta dan komitmen ketangguhan untuk dirimu di masa depan!" }
+    };
+
+    let personalQuizBundle = []; 
+    let currentStepIndex = 0;
+
+    function generatePersonalQuizBundle() {
+        personalQuizBundle = []; 
+        currentStepIndex = 0;
+        for (let part = 1; part <= 10; part++) { personalQuizBundle.push(bankSoal[part]); }
+        showCurrentStep();
+    }
+
+    function showCurrentStep() {
+        const currentData = personalQuizBundle[currentStepIndex];
+        document.getElementById('quizFeedbackBox').style.display = 'none';
+        document.getElementById('nextQuizBtn').style.display = 'none';
+        document.getElementById('resetQuizBtn').style.display = 'none';
+        
+        let pct = ((currentStepIndex + 1) / personalQuizBundle.length) * 100;
+        document.getElementById('quizBar').style.width = pct + "%";
+        document.getElementById('partTitle').innerText = `Langkah Kuis ${currentStepIndex + 1} dari 10`;
+
+        if (currentData.type === "essay") {
+            document.getElementById('questionText').innerText = currentData.q;
+            document.getElementById('optionsContainer').innerHTML = "";
+            document.getElementById('essayContainer').style.display = "block";
+            document.getElementById('nextQuizBtn').innerHTML = "Simpan Komitmen Pertumbuhan! ✨";
+            document.getElementById('nextQuizBtn').style.display = "inline-block";
+        } else {
+            document.getElementById('essayContainer').style.display = "none";
+            document.getElementById('questionText').innerText = currentData.q;
+            
+            let htmlOptions = "";
+            currentData.o.forEach((opsi, idx) => {
+                // Mengirimkan teks respon responsible ke dalam function penangan klik
+                htmlOptions += `<div class="quiz-option" onclick="selectResponsibleOption('${opsi.r.replace(/'/g, "\\'")}')">${idx + 1}. ${opsi.t}</div>`;
+            });
+            document.getElementById('optionsContainer').innerHTML = htmlOptions;
+        }
+    }
+
+    function selectResponsibleOption(responText) {
+        const fbBox = document.getElementById('quizFeedbackBox');
+        fbBox.innerHTML = `<strong>💌 Validasi & Dukungan Besty:</strong><br>${responText}`;
+        fbBox.style.display = 'block';
+        
+        document.getElementById('nextQuizBtn').innerHTML = "Langkah Berikutnya <i class='fa-solid fa-arrow-right'></i>";
+        document.getElementById('nextQuizBtn').style.display = 'inline-block';
+        
+        speakOfficial(responText);
+    }
+
+    function processNextStep() {
+        if (currentStepIndex === 9) {
+            document.getElementById('questionText').innerText = "Kuis Refleksi Selesai! 🏆🎉";
+            document.getElementById('optionsContainer').innerHTML = "<p style='color:#2ecc71; font-weight:600;'>Komitmen jiwamu telah terkunci di pusat emosional Besty. Kamu luar biasa tangguh!</p>";
+            document.getElementById('essayContainer').style.display = "none";
+            document.getElementById('nextQuizBtn').style.display = "none";
+            document.getElementById('resetQuizBtn').style.display = "inline-block";
+            return;
+        }
+        currentStepIndex++; 
+        showCurrentStep();
+    }
+
+    // =========================================================================
+    // MODAL EDUKASI GENRE UTUH DAN MENDALAM SESUAI DATA RESMI SEBELUMNYA
+    // =========================================================================
+    const genreDatabase = {
+        dimensi: {
+            title: "10 Dimensi Kesiapan Berkeluarga (BKKBN)",
+            body: `
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">1. Kesiapan Usia Pernikahan <span>+</span></div>
+                    <div class="nested-body">Standarisasi minimal usia ideal menikah menurut BKKBN adalah <b>21 tahun untuk perempuan</b> dan <b>25 tahun untuk laki-laki</b>. Batasan ini dirancang demi kematangan biologis rahim wanita serta kesiapan mental psikologis mengarungi bahtera rumah tangga.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">2. Kesiapan Fisik & Biologis <span>+</span></div>
+                    <div class="nested-body">Memastikan organ reproduksi telah berkembang sempurna, serta kondisi tubuh bebas dari penyakit kronis tersembunyi yang berisiko menular atau mengganggu proses kehamilan kelak.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">3. Kesiapan Mental Psikologis <span>+</span></div>
+                    <div class="nested-body">Kemampuan mengelola tingkat stres pribadi, mengontrol regulasi emosi amarah, serta kesiapan mental menerima peran baru sebagai suami, istri, ataupun orang tua tanpa meluapkan trauma masa lalu.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">4. Kesiapan Finansial / Ekonomi <span>+</span></div>
+                    <div class="nested-body">Kandungan pemenuhan nafkah pokok dasar (pangan, sandang, papan) secara mandiri dan berkelanjutan untuk menghindari pemicu utama keretakan fondasi rumah tangga.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">5. Kesiapan Intelektual <span>+</span></div>
+                    <div class="nested-body">Kapasitas pengetahuan seputar ilmu parenting, cara mengasuh anak yang benar, pemahaman hak reproduksi, serta manajemen konflik rumah tangga.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">6. Kesiapan Sosial <span>+</span></div>
+                    <div class="nested-body">Kemampuan beradaptasi dengan lingkungan bertetangga baru, bersosialisasi dengan keluarga besar pasangan, serta menjaga nama baik keluarga di mata publik.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">7. Kesiapan Moral / Spiritual <span>+</span></div>
+                    <div class="nested-body">Kekuatan fondasi keimanan sebagai kompas nilai moral dalam mendidik anak dan menjaga kesetiaan janji suci ikatan pernikahan.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">8. Kesiapan Emosional <span>+</span></div>
+                    <div class="nested-body">Kemampuan berempati tinggi pada pasangan, menekan ego pribadi demi kemaslahatan bersama, dan menyelesaikan masalah tanpa kekerasan fisik maupun verbal.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">9. Kesiapan Hukum / Yuridis <span>+</span></div>
+                    <div class="nested-body">Kepatuhan administrasi negara untuk mencatatkan pernikahan resmi di KUA atau Catatan Sipil demi perlindungan hukum hak istri dan anak.</div>
+                </div>
+                <div class="nested-item">
+                    <div class="nested-header" onclick="toggleNested(this)">10. Kesiapan Interpersonal <span>+</span></div>
+                    <div class="nested-body">Keahlian komunikasi dua arah secara asertif dengan pasangan, mendengarkan aktif, dan bernegosiasi menyelesaikan problematika kehidupan harian tanpa intervensi toxic dari luar.</div>
+                </div>
+            `
+        },
+        fungsi: {
+            title: "8 Fungsi Keluarga (Fondasi Utama Masyarakat)",
+            body: `
+                <p>Keluarga yang ideal wajib mengimplementasikan 8 fungsi mendasar ini secara seimbang:</p>
+                <ul>
+                    <li><b>Fungsi Agama:</b> Menjadi tempat pertama mengenalkan nilai keimanan dan ibadah kepada tuhan.</li>
+                    <li><b>Fungsi Sosial Budaya:</b> Mewariskan nilai luhur budi pekerti, sopan santun, dan tradisi kebaikan bangsa.</li>
+                    <li><b>Fungsi Cinta Kasih:</b> Memberikan landasan rasa aman, pelukan penerimaan, dan kasih sayang yang tulus tanpa syarat.</li>
+                    <li><b>Fungsi Perlindungan:</b> Menjadi tempat bernaung paling aman fisik maupun mental dari ancaman luar.</li>
+                    <li><b>Fungsi Reproduksi:</b> Mengatur keturunan secara sehat, terencana, dan penuh tanggung jawab kemanusiaan.</li>
+                    <li><b>Fungsi Sosialisasi & Edukasi:</b> Sekolah pertama bagi anak untuk belajar berbicara, bermoral, dan berilmu.</li>
+                    <li><b>Fungsi Ekonomi:</b> Pusat pengaturan keuangan, pemenuhan kebutuhan hidup, dan pembagian tugas kerja.</li>
+                    <li><b>Fungsi Pembinaan Lingkungan:</b> Mengajarkan kesadaran menjaga kelestarian alam dan kebersihan lingkungan sekitar.</li>
+                </ul>
+            `
+        },
+        mental: {
+            title: "Kesehatan Mental & Pola Asuh Remaja",
+            body: `
+                <p>Kesehatan mental remaja sangat dipengaruhi oleh atmosfer pola asuh di dalam rumah tangga:</p>
+                <ul>
+                    <li><b>Pola Asuh Autoritatif (Ideal):</b> Menyeimbangkan antara aturan yang tegas dengan diskusi kasih kasih yang terbuka dan asertif. Membantu anak tumbuh percaya diri.</li>
+                    <li><b>Pola Asuh Otoriter (Bahaya):</b> Menuntut kepatuhan mutlak tanpa mau mendengarkan isi hati anak. Memicu timbulnya trauma batin dan kecemasan kronis.</li>
+                    <li><b>Pola Asuh Permisif:</b> Membebaskan anak tanpa aturan sama sekali, memicu anak sulit mengontrol emosi di ruang publik.</li>
+                    <li><b>Pola Asuh Pengabaian (Neglectful):</b> Mengabaikan kebutuhan emosional fisik anak, akar utama munculnya fenomena <i>fatherless</i> dan kenakalan remaja akibat mencari perhatian instan di luar rumah.</li>
+                </ul>
+            `
+        },
+        softskill: {
+            title: "10 Life Skill / Kecakapan Hidup (Standarisasi WHO)",
+            body: `
+                <p>Remaja berencana wajib melatih 10 kompetensi kecakapan hidup ini untuk bertahan dan sukses di masyarakat:</p>
+                <ol>
+                    <li><b>Kesadaran Diri (Self Awareness):</b> Mengenali kelebihan, kekurangan, dan emosi diri sendiri.</li>
+                    <li><b>Empati:</b> Mampu merasakan dan memahami posisi perasaan orang lain.</li>
+                    <li><b>Pengambilan Keputusan:</b> Menentukan pilihan logis berdasarkan konsekuensi masa depan.</li>
+                    <li><b>Pemecahan Masalah (Problem Solving):</b> Menemukan solusi konstruktif atas konflik.</li>
+                    <li><b>Berpikir Kritis:</b> Menganalisis informasi secara objektif sebelum memercayainya.</li>
+                    <li><b>Berpikir Kreatif:</b> Menemukan inovasi alternatif sudut pandang baru.</li>
+                    <li><b>Komunikasi Asertif:</b> Berani mengutarakan pendapat jujur tanpa menyakiti orang lain.</li>
+                    <li><b>Hubungan Interpersonal:</b> Membangun sirkel pertemanan yang sehat dan suportif.</li>
+                    <li><b>Mengendalikan Emosi:</b> Mengelola gejolak amarah dan kesedihan secara bijaksana.</li>
+                    <li><b>Mengatasi Stres:</b> Mekanisme coping meredakan tekanan hidup dengan sehat.</li>
+                </ol>
+            `
+        },
+        gati: {
+            title: "Program GATI (Keluarga Sehat Berencana BKKBN)",
+            body: `
+                <p><b>Program GATI (Keluarga Sehat Berencana)</b> difokuskan pada gerakan nyata pemberdayaan keluarga Indonesia melalui pilar-pilar penting:</p>
+                <ul>
+                    <li><b>Pencegahan Stunting:</b> Edukasi gizi seimbang sejak 1000 Hari Pertama Kehidupan (HPK) demi melahirkan generasi emas bebas stunting.</li>
+                    <li><b>BKR (Bina Keluarga Remaja):</b> Wadah pembimbingan bagi orang tua yang memiliki anak remaja agar tahu cara berkomunikasi intim tanpa memicu pertengkaran.</li>
+                    <li><b>PUP (Pendewasaan Usia Perkawinan):</b> Kampanye masif menolak keras pernikahan usia anak demi keselamatan ibu dan bayi.</li>
+                </ul>
+            `
+        }
+    };
+
+    function openGenRe(key) {
+        const data = genreDatabase[key];
+        document.getElementById('genreModalTitle').innerText = data.title;
+        document.getElementById('genreModalBody').innerHTML = data.body;
+        document.getElementById('genreModal').style.display = 'flex';
+    }
+
+    function closeGenRe() { document.getElementById('genreModal').style.display = 'none'; }
+    function toggleNested(headerElement) {
+        const body = headerElement.nextElementSibling;
+        const span = headerElement.querySelector('span');
+        if (body.style.display === "block") {
+            body.style.display = "none"; span.innerText = "+";
+        } else {
+            body.style.display = "block"; span.innerText = "-";
+        }
+    }
+
+    updateNav();
+</script>
+
+</body>
+</html>
+"""
+
